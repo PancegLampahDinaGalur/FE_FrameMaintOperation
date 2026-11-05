@@ -1,0 +1,15 @@
+export const icons = {
+  grid: '▦',
+  asset: '▣',
+  calendar: '▤',
+  team: '♙',
+  report: '◫',
+  settings: '⚙',
+  search: '⌕',
+  bell: '♢',
+  arrow: '↗',
+  check: '✓',
+  clock: '◷',
+  alert: '!',
+  chevron: '⌄',
+};
