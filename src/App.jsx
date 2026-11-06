@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import { Topbar } from './components/layout/Topbar';
-import { DashboardPage } from './components/dashboard/DashboardPage';
+import { OverviewPage } from './components/overview/OverviewPage';
 import { TeamPage } from './components/team/TeamPage';
 
 export default function App() {
@@ -22,7 +22,7 @@ export default function App() {
       <Sidebar activeNav={activeNav} onNavigate={handleNavigate} isOpen={menuOpen} onMenuToggle={() => setMenuOpen((isOpen) => !isOpen)} />
       <main className="main-content" style={{ marginLeft: menuOpen ? '252px' : '0px' }}>
         <Topbar activeNav={activeNav} onMenuToggle={() => setMenuOpen((isOpen) => !isOpen)} menuOpen={menuOpen} darkMode={darkMode} onThemeToggle={() => setDarkMode((isDark) => !isDark)} />
-        {activeNav === 'Team' ? <TeamPage /> : <DashboardPage />}
+        {activeNav === 'Team' ? <TeamPage /> : <OverviewPage />}
       </main>
     </div>
   );

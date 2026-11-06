@@ -6,7 +6,7 @@ import { UptimePanel } from './UptimePanel';
 import { MaintenanceList } from './MaintenanceList';
 import { ActivityPanel } from './ActivityPanel';
 
-export function DashboardPage() {
+export function OverviewPage() {
   return (
     <section className="content">
       <PageHeading />

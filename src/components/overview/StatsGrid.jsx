@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from '../common/Icon';
 import { icons } from '../../constants/icons';
-import { statCards } from '../../data/dashboardData';
+import { statCards } from '../../data/overview/overviewData';
 
 export function StatsGrid() {
   return (
