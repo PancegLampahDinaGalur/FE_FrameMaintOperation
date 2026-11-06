@@ -11,7 +11,6 @@ export function Topbar({ onMenuToggle, activeNav, menuOpen, darkMode, onThemeTog
         <button className="icon-button search-button" aria-label="Search"><Icon name={icons.search} /></button>
         <button className="icon-button notification-button" aria-label="Notifications"><Icon name={icons.bell} /><i /></button>
         <button className="theme-toggle" onClick={onThemeToggle} aria-label={darkMode ? 'Switch to day mode' : 'Switch to night mode'} title={darkMode ? 'Day mode' : 'Night mode'}>{darkMode ? '☀' : '☾'}</button>
-        <div className="top-avatar avatar-dark">JD</div>
       </div>
     </header>
   );

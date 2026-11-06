@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Icon } from '../common/Icon';
 import { icons } from '../../constants/icons';
 import { navItems } from '../../data/overview/overviewData';
 
 export function Sidebar({ activeNav, onNavigate, isOpen, onMenuToggle }) {
+  const [selectedWorkspace, setSelectedWorkspace] = useState('Zone 1 & ED');
+  const [workspaceMenuOpen, setWorkspaceMenuOpen] = useState(false);
+  const workspaces = ['Zone 1 & ED', 'Zone 2', 'Zone & Unit'];
+
   return (
     <aside className={`sidebar ${isOpen ? 'is-open' : ''}`}>
       <div className="brand">
@@ -11,11 +15,44 @@ export function Sidebar({ activeNav, onNavigate, isOpen, onMenuToggle }) {
         <div><strong>Frame<span>Maint</span></strong><small>OPERATIONS HUB</small></div>
       </div>
       <button className="sidebar-close" onClick={onMenuToggle} aria-label="Close menu">‹</button>
-      <div className="workspace-switcher">
-        <div className="workspace-icon">F</div>
-        <div><small>WORKSPACE</small><strong>Factory Floor 01</strong></div>
-        <Icon name={icons.chevron} className="muted" />
-      </div>
+      {activeNav === 'Assets' && (
+        <div className={`workspace-switcher ${workspaceMenuOpen ? 'is-open' : ''}`}>
+          <div className="workspace-icon">F</div>
+          <div className="workspace-picker">
+            <button
+              className="workspace-trigger"
+              type="button"
+              aria-expanded={workspaceMenuOpen}
+              aria-haspopup="listbox"
+              onClick={() => setWorkspaceMenuOpen((isOpen) => !isOpen)}
+            >
+            <small>WORKSPACE</small>
+              <strong>{selectedWorkspace}</strong>
+              <Icon name={icons.chevron} className="workspace-chevron" />
+            </button>
+            {workspaceMenuOpen && (
+              <div className="workspace-menu" role="listbox" aria-label="Workspace options">
+                {workspaces.map((workspace) => (
+                  <button
+                    className={workspace === selectedWorkspace ? 'selected' : ''}
+                    key={workspace}
+                    type="button"
+                    role="option"
+                    aria-selected={workspace === selectedWorkspace}
+                    onClick={() => {
+                      setSelectedWorkspace(workspace);
+                      setWorkspaceMenuOpen(false);
+                    }}
+                  >
+                    <span className="workspace-option-mark">{workspace === selectedWorkspace ? '✓' : '·'}</span>
+                    <span>{workspace}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       <nav className="main-nav" aria-label="Main navigation">
         <p>MAIN MENU</p>
         {navItems.map((item) => (
@@ -33,11 +70,6 @@ export function Sidebar({ activeNav, onNavigate, isOpen, onMenuToggle }) {
           <div className="support-icon">?</div>
           <div><strong>Need a hand?</strong><span>Visit our help center</span></div>
           <Icon name={icons.arrow} />
-        </div>
-        <div className="profile">
-          <div className="avatar avatar-dark">JD</div>
-          <div><strong>Jordan Davis</strong><span>Operations manager</span></div>
-          <Icon name={icons.chevron} className="muted" />
         </div>
       </div>
     </aside>
