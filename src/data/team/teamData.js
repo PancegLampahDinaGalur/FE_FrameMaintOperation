@@ -1,11 +1,11 @@
 export const teamMembers = [
-  { initials: 'PJ', name: 'Pajar', role: 'Maintenance lead', tone: 'violet', attendance: '98%', jobs: 12 },
-  { initials: 'WH', name: 'Wahyu', role: 'Electrical technician', tone: 'orange', attendance: '96%', jobs: 10 },
-  { initials: 'AT', name: 'Artadi', role: 'Mechanical technician', tone: 'green', attendance: '94%', jobs: 9 },
-  { initials: 'AW', name: 'Awan', role: 'Safety specialist', tone: 'blue', attendance: '91%', jobs: 8 },
-  { initials: 'HR', name: 'Heru', role: 'Maintenance technician', tone: 'violet', attendance: '95%', jobs: 8 },
-  { initials: 'TT', name: 'Tata', role: 'Electrical technician', tone: 'orange', attendance: '93%', jobs: 7 },
-  { initials: 'RW', name: 'Ridwan', role: 'Mechanical technician', tone: 'green', attendance: '92%', jobs: 6 },
+  { id: 7, initials: 'PJ', name: 'Pajar', role: 'Maintenance lead', tone: 'violet', attendance: '98%', jobs: 12 },
+  { id: 6, initials: 'WH', name: 'Wahyu', role: 'Electrical technician', tone: 'orange', attendance: '96%', jobs: 10 },
+  { id: 4, initials: 'AT', name: 'Artadi', role: 'Mechanical technician', tone: 'green', attendance: '94%', jobs: 9 },
+  { id: 5, initials: 'AW', name: 'Awan', role: 'Safety specialist', tone: 'blue', attendance: '91%', jobs: 8 },
+  { id: 2, initials: 'HR', name: 'Heru', role: 'Maintenance technician', tone: 'violet', attendance: '95%', jobs: 8 },
+  { id: 3, initials: 'TT', name: 'Tata', role: 'Electrical technician', tone: 'orange', attendance: '93%', jobs: 7 },
+  { id: 1, initials: 'RW', name: 'Ridwan', role: 'Mechanical technician', tone: 'green', attendance: '92%', jobs: 6 },
 ];
 
 export const voiceMembers = [

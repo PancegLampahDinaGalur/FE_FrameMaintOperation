@@ -2497,7 +2497,7 @@ button {
   }
 }
 
-/* ===== Edit Job & Attendance Sidebar ===== */
+/* ===== Reusable Right Input Sidebar ===== */
 .sidebar-backdrop {
   position: fixed;
   inset: 0;
@@ -2510,7 +2510,7 @@ button {
 .sidebar-backdrop.is-visible {
   opacity: 1;
 }
-.edit-job-sidebar {
+.right-input-sidebar {
   position: fixed;
   top: 0;
   right: 0;
@@ -2528,7 +2528,7 @@ button {
   min-height: 0;
   overflow: hidden;
 }
-.edit-job-sidebar.is-open {
+.right-input-sidebar.is-open {
   transform: translateX(0);
 }
 .sidebar-close-btn {
@@ -2661,6 +2661,68 @@ button {
   font-size: 13px;
   font-weight: 700;
 }
+.attendance-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 11px 12px;
+  border: 1px solid #e6e0fb;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+}
+.attendance-toggle strong,
+.attendance-toggle small {
+  display: block;
+}
+.attendance-toggle strong {
+  color: #38334f;
+  font-size: 12px;
+}
+.attendance-toggle small {
+  margin-top: 3px;
+  color: #756f88;
+  font-size: 10px;
+}
+.attendance-toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.attendance-toggle-track {
+  position: relative;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: #d7d3e2;
+  transition: background 0.2s ease;
+}
+.attendance-toggle-track::after {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+  transition: transform 0.2s ease;
+}
+.attendance-toggle input:checked + .attendance-toggle-track {
+  background: #6f56ef;
+}
+.attendance-toggle input:checked + .attendance-toggle-track::after {
+  transform: translateX(16px);
+}
+.attendance-toggle input:focus-visible + .attendance-toggle-track {
+  outline: 3px solid rgba(111, 86, 239, 0.25);
+  outline-offset: 2px;
+}
 .sidebar-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2706,6 +2768,15 @@ button {
   background: #fff;
   box-shadow: 0 0 0 3px rgba(111, 86, 239, 0.08);
 }
+.form-group select:disabled,
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background: #eceaf2;
+  border-color: #e0dde8;
+  color: #817c8c;
+  cursor: not-allowed;
+  opacity: 1;
+}
 .sidebar-actions {
   display: flex;
   justify-content: flex-end;
@@ -2744,10 +2815,60 @@ button {
 .secondary-button:active {
   transform: scale(0.99);
 }
+.save-button:disabled,
+.secondary-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+.sidebar-error {
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid #f1b6b6;
+  border-radius: 10px;
+  background: #fff1f1;
+  color: #9c2525;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+.app-save-notice {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: calc(100vw - 40px);
+  padding: 12px 14px;
+  border: 1px solid #b7e5c4;
+  border-radius: 10px;
+  background: #effbf2;
+  color: #226b36;
+  box-shadow: 0 8px 24px rgba(32, 88, 47, 0.16);
+  font-size: 13px;
+}
+.app-save-notice button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 18px;
+  cursor: pointer;
+}
 .dark-mode .sidebar-backdrop {
   background: rgba(0, 0, 0, 0.68);
 }
-.dark-mode .edit-job-sidebar {
+.dark-mode .sidebar-error {
+  border-color: #704141;
+  background: #3a282d;
+  color: #ffb6b6;
+}
+.dark-mode .app-save-notice {
+  border-color: #315d3b;
+  background: #24352a;
+  color: #b6ecc2;
+}
+.dark-mode .right-input-sidebar {
   background: #211f31;
   border-left-color: #3c3850;
   box-shadow: -8px 0 32px rgba(0, 0, 0, 0.28);
@@ -2794,12 +2915,29 @@ button {
   border-color: rgba(111, 86, 239, 0.32);
   color: #d7d0ff;
 }
+.dark-mode .attendance-toggle {
+  background: #2a283d;
+  border-color: #3d3a52;
+}
+.dark-mode .attendance-toggle strong {
+  color: #eeeaff;
+}
+.dark-mode .attendance-toggle small {
+  color: #bdb8d0;
+}
 .dark-mode .form-group select,
 .dark-mode .form-group input,
 .dark-mode .form-group textarea {
   background: #2a283d;
   border-color: #3d3a52;
   color: #eeeaff;
+}
+.dark-mode .form-group select:disabled,
+.dark-mode .form-group input:disabled,
+.dark-mode .form-group textarea:disabled {
+  background: #39364b;
+  border-color: #48445d;
+  color: #aaa5b7;
 }
 .dark-mode .secondary-button {
   background: #2d2a3d;
@@ -2813,7 +2951,7 @@ button {
 }
 
 @media (max-width: 700px) {
-  .edit-job-sidebar {
+  .right-input-sidebar {
     width: 100%;
     max-width: 100vw;
   }
