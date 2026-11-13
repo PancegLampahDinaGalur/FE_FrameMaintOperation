@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   useGetAttendanceQuery,
   useGetJobsQuery,
@@ -113,6 +114,7 @@ export function TeamPage({
   membersError,
   onRetryMembers,
   onEditSidebarOpen,
+  canManageOperations = true,
 }) {
   const [monthDate, setMonthDate] = useState(initialMonth);
   const [editSidebarOpen, setEditSidebarOpen] = useState(false);
@@ -172,9 +174,13 @@ export function TeamPage({
             entry.
           </p>
         </div>
-        <button className="primary-button">
-          <span>＋</span> Add team member
-        </button>
+        <Link
+          className="primary-button"
+          to="/attendance-requests"
+        >
+          <span>＋</span>{" "}
+          {canManageOperations ? "Pengajuan absensi" : "Ajukan absensi"}
+        </Link>
       </div>
 
       <ApiError
@@ -222,9 +228,10 @@ export function TeamPage({
         isOpen={editSidebarOpen}
         onClose={() => setEditSidebarOpen(false)}
         members={members}
-        attendance={attendanceExceptions}
+        attendance={attendance}
         jobs={jobs}
         initialDate={editDate}
+        canManageOperations={canManageOperations}
       />
     </section>
   );

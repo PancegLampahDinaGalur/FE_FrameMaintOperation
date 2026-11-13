@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getMonthData } from "./AttendanceCalendar";
 import {
+  findAttendanceRecord,
   getAttendanceForDate,
   getAttendanceExceptions,
   getAttendanceStatusLabel,
@@ -58,5 +59,32 @@ describe("attendanceUtils", () => {
     expect(getAttendanceForDate(records, "2026-11-13")).toEqual([
       records[1],
     ]);
+  });
+
+  it("finds existing attendance by the backend unique key", () => {
+    const records = [
+      {
+        id: "1",
+        member: { id: 12 },
+        date: "2026-11-13T00:00:00.000Z",
+        shift: "morning",
+        status: "present",
+      },
+    ];
+
+    expect(
+      findAttendanceRecord(records, {
+        memberId: "12",
+        date: "2026-11-13",
+        shift: "morning",
+      }),
+    ).toBe(records[0]);
+    expect(
+      findAttendanceRecord(records, {
+        memberId: 12,
+        date: "2026-11-13",
+        shift: "afternoon",
+      }),
+    ).toBeUndefined();
   });
 });

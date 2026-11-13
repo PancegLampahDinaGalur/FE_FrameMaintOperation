@@ -110,6 +110,11 @@
 .dark-mode .sidebar-close:hover {
   background: #494174;
 }
+.dark-mode .sidebar-logout {
+  border-color: #49445f;
+  background: #211f31;
+  color: #d0c8ff;
+}
 .dark-mode .period-select select,
 .dark-mode .calendar-month button {
   border-color: #4a465f;

@@ -5,7 +5,7 @@ import { icons } from '../../constants/icons';
 import { navItems } from '../../data/overview/overviewData';
 import { navRoutes } from '../../routes';
 
-export function Sidebar({ isOpen, onMenuToggle }) {
+export function Sidebar({ isOpen, onMenuToggle, role, onLogout }) {
   const location = useLocation();
   const navigate = useNavigate();
   const activeNav =
@@ -86,6 +86,22 @@ export function Sidebar({ isOpen, onMenuToggle }) {
             {item.count && <em>{item.count}</em>}
           </button>
         ))}
+        <button
+          className={`nav-item ${activeNav === 'Attendance requests' ? 'active' : ''}`}
+          onClick={() => handleNavigate('Attendance requests')}
+        >
+          <Icon name={icons.calendar} />
+          <span>Attendance requests</span>
+        </button>
+        {role === 'sysadmin' && (
+          <button
+            className={`nav-item ${activeNav === 'Accounts' ? 'active' : ''}`}
+            onClick={() => handleNavigate('Accounts')}
+          >
+            <Icon name={icons.team} />
+            <span>Accounts</span>
+          </button>
+        )}
         <p className="nav-section">SYSTEM</p>
         <button
           className={`nav-item ${activeNav === 'Settings' ? 'active' : ''}`}
@@ -105,6 +121,10 @@ export function Sidebar({ isOpen, onMenuToggle }) {
           </div>
           <Icon name={icons.arrow} />
         </div>
+        <button type="button" className="sidebar-logout" onClick={onLogout}>
+          <span aria-hidden="true">↪</span>
+          Sign out
+        </button>
       </div>
     </aside>
   );

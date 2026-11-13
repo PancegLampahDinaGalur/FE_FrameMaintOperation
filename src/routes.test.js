@@ -8,12 +8,18 @@ describe("navigation routes", () => {
     expect(new Set(paths).size).toBe(paths.length);
     expect(routeLabels["/"]).toBe("Overview");
     expect(routeLabels["/team"]).toBe("Team");
+    expect(routeLabels["/attendance-requests"]).toBe("Attendance requests");
+    expect(routeLabels["/admin/accounts"]).toBe("Accounts");
   });
 
   it("identifies only pages that have an implemented screen", () => {
     expect(implementedRoutes).toEqual({
       overview: "/",
       team: "/team",
+      login: "/login",
+      register: "/register",
+      attendanceRequests: "/attendance-requests",
+      adminAccounts: "/admin/accounts",
     });
   });
 });

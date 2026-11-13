@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { RightInputSidebar } from "../layout/RightInputSidebar";
 import {
   useCreateAttendanceMutation,
@@ -9,6 +9,7 @@ import {
   useUpdateJobMutation,
 } from "../../services/teamApi";
 import {
+  findAttendanceRecord,
   getAttendanceExceptions,
   getAttendanceStatusLabel,
   normalizeAttendanceStatus,
@@ -79,6 +80,7 @@ export function EditJobAttendanceSidebar({
   attendance,
   jobs,
   initialDate,
+  canManageOperations = true,
 }) {
   const [mode, setMode] = useState("list");
   const [attendanceRecord, setAttendanceRecord] = useState(null);
@@ -90,6 +92,9 @@ export function EditJobAttendanceSidebar({
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [pendingDelete, setPendingDelete] = useState(null);
+  const [deleteError, setDeleteError] = useState("");
+  const cancelDeleteButtonRef = useRef(null);
   const [createAttendance] = useCreateAttendanceMutation();
   const [updateAttendance] = useUpdateAttendanceMutation();
   const [deleteAttendance] = useDeleteAttendanceMutation();
@@ -121,6 +126,19 @@ export function EditJobAttendanceSidebar({
     setAttendanceForm(initialAttendanceForm(initialDate, null));
     setJobForm(initialJobForm(initialDate, null));
   }, [initialDate, isOpen]);
+
+  useEffect(() => {
+    if (!pendingDelete) return undefined;
+    cancelDeleteButtonRef.current?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !isSaving) {
+        setPendingDelete(null);
+        setDeleteError("");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [pendingDelete, isSaving]);
 
   const startAttendanceForm = (record = null) => {
     setAttendanceRecord(record);
@@ -157,12 +175,19 @@ export function EditJobAttendanceSidebar({
         shift: attendanceForm.shift,
         status: attendanceForm.status,
       };
-      if (attendanceRecord) {
-        await updateAttendance({ id: attendanceRecord.id, body }).unwrap();
-        setSuccessMessage("Pengecualian absensi berhasil diperbarui.");
+      const existingRecord =
+        attendanceRecord ||
+        findAttendanceRecord(attendance, {
+          memberId: body.memberId,
+          date: body.date,
+          shift: body.shift,
+        });
+      if (existingRecord) {
+        await updateAttendance({ id: existingRecord.id, body }).unwrap();
+        setSuccessMessage("Absensi berhasil diperbarui.");
       } else {
         await createAttendance(body).unwrap();
-        setSuccessMessage("Pengecualian absensi berhasil dicatat.");
+        setSuccessMessage("Absensi berhasil dicatat.");
       }
       setMode("list");
       setAttendanceRecord(null);
@@ -202,96 +227,93 @@ export function EditJobAttendanceSidebar({
     }
   };
 
-  const handleDeleteAttendance = async (record) => {
-    if (!window.confirm(`Hapus absensi ${record.member.name} tanggal ${record.date.slice(0, 10)}?`)) {
-      return;
-    }
+  const handleConfirmDelete = async () => {
+    if (!pendingDelete) return;
     setIsSaving(true);
-    setErrorMessage("");
+    setDeleteError("");
     setSuccessMessage("");
     try {
-      await deleteAttendance(record.id).unwrap();
-      setSuccessMessage("Absensi berhasil dihapus.");
+      if (pendingDelete.type === "attendance") {
+        await deleteAttendance(pendingDelete.record.id).unwrap();
+        setSuccessMessage("Absensi berhasil dihapus.");
+      } else {
+        await deleteJob(pendingDelete.record.id).unwrap();
+        setSuccessMessage("Job berhasil dihapus.");
+      }
+      setPendingDelete(null);
     } catch (error) {
-      setErrorMessage(getErrorMessage(error));
+      setDeleteError(getErrorMessage(error));
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleDeleteJob = async (record) => {
-    if (!window.confirm(`Hapus job "${record.title}"?`)) return;
-    setIsSaving(true);
-    setErrorMessage("");
-    setSuccessMessage("");
-    try {
-      await deleteJob(record.id).unwrap();
-      setSuccessMessage("Job berhasil dihapus.");
-    } catch (error) {
-      setErrorMessage(getErrorMessage(error));
-    } finally {
-      setIsSaving(false);
-    }
+  const requestDelete = (type, record) => {
+    setDeleteError("");
+    setPendingDelete({ type, record });
   };
 
   return (
-    <RightInputSidebar
-      isOpen={isOpen}
-      onClose={onClose}
-      eyebrow="TEAM OPERATIONS"
-      title={
-        mode === "attendance"
-          ? attendanceRecord
-            ? "Edit pengecualian absensi"
-            : "Catat pengecualian absensi"
-          : mode === "job"
-            ? jobRecord
-              ? "Edit job"
-              : "Tambah job"
-            : "Kelola absensi & job"
-      }
-      subtitle={
-        mode === "list"
-          ? `Pengecualian absensi dan job tanggal ${initialDate}. Kehadiran normal tidak perlu dicatat.`
-          : "Periksa kembali detail sebelum menyimpan perubahan."
-      }
-      headerActions={
-        mode !== "list" && (
-          <button
-            type="button"
-            className="sidebar-ghost-btn"
-            onClick={returnToList}
-            disabled={isSaving}
-          >
-            Kembali
-          </button>
-        )
-      }
-    >
-      {errorMessage && (
-        <p className="sidebar-error" role="alert">
-          {errorMessage}
-        </p>
-      )}
-      {successMessage && (
-        <p className="crud-success-message" role="status">
-          {successMessage}
-        </p>
-      )}
+    <>
+      <RightInputSidebar
+        isOpen={isOpen}
+        onClose={onClose}
+        eyebrow="TEAM OPERATIONS"
+        title={
+          mode === "attendance"
+            ? attendanceRecord
+              ? "Edit absensi"
+              : "Catat absensi"
+            : mode === "job"
+              ? jobRecord
+                ? "Edit job"
+                : "Tambah job"
+              : "Kelola absensi & job"
+        }
+        subtitle={
+          mode === "list"
+            ? `Data absensi dan job tanggal ${initialDate}. Kehadiran normal tidak perlu dicatat.`
+            : "Periksa kembali detail sebelum menyimpan perubahan."
+        }
+        headerActions={
+          mode !== "list" && (
+            <button
+              type="button"
+              className="sidebar-ghost-btn"
+              onClick={returnToList}
+              disabled={isSaving}
+            >
+              Kembali
+            </button>
+          )
+        }
+      >
+        {errorMessage && (
+          <p className="sidebar-error" role="alert">
+            {errorMessage}
+          </p>
+        )}
+        {successMessage && (
+          <p className="crud-success-message" role="status">
+            {successMessage}
+          </p>
+        )}
 
-      {mode === "list" && (
+        {mode === "list" && (
         <div className="sidebar-form">
           <section className="sidebar-section crud-record-section">
             <div className="section-title-wrap">
-              <span className="section-badge">Pengecualian absensi</span>
-              <button
-                type="button"
-                className="secondary-button crud-add-button"
-                onClick={() => startAttendanceForm()}
-                disabled={!members.length || isSaving}
-              >
-                + Catat pengecualian
-              </button>
+              <span className="section-badge">Absensi</span>
+              {canManageOperations && (
+                <button
+                  type="button"
+                  className="secondary-button crud-add-button"
+                  onClick={() => startAttendanceForm()}
+                  disabled={!members.length || isSaving}
+                >
+                  + Catat absensi
+                </button>
+              )}
             </div>
             {dayAttendance.length ? (
               dayAttendance.map((record) => (
@@ -304,29 +326,31 @@ export function EditJobAttendanceSidebar({
                         record.shift}
                     </span>
                   </div>
-                  <div className="crud-record-actions">
-                    <button
-                      type="button"
-                      className="crud-action-button"
-                      onClick={() => startAttendanceForm(record)}
-                      disabled={isSaving}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      className="crud-action-button danger"
-                      onClick={() => handleDeleteAttendance(record)}
-                      disabled={isSaving}
-                    >
-                      Hapus
-                    </button>
-                  </div>
+                  {canManageOperations && (
+                    <div className="crud-record-actions">
+                      <button
+                        type="button"
+                        className="crud-action-button"
+                        onClick={() => startAttendanceForm(record)}
+                        disabled={isSaving}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="crud-action-button danger"
+                        onClick={() => requestDelete("attendance", record)}
+                        disabled={isSaving}
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  )}
                 </article>
               ))
             ) : (
               <p className="crud-empty">
-                Tidak ada pengecualian absensi pada tanggal ini.
+                Belum ada data absensi untuk tanggal ini.
               </p>
             )}
           </section>
@@ -334,14 +358,16 @@ export function EditJobAttendanceSidebar({
           <section className="sidebar-section crud-record-section">
             <div className="section-title-wrap">
               <span className="section-badge accent">Job plotting</span>
-              <button
-                type="button"
-                className="secondary-button crud-add-button"
-                onClick={() => startJobForm()}
-                disabled={isSaving}
-              >
-                + Tambah job
-              </button>
+              {canManageOperations && (
+                <button
+                  type="button"
+                  className="secondary-button crud-add-button"
+                  onClick={() => startJobForm()}
+                  disabled={isSaving}
+                >
+                  + Tambah job
+                </button>
+              )}
             </div>
             {dayJobs.length ? (
               dayJobs.map((record) => (
@@ -356,24 +382,26 @@ export function EditJobAttendanceSidebar({
                         record.shift}
                     </span>
                   </div>
-                  <div className="crud-record-actions">
-                    <button
-                      type="button"
-                      className="crud-action-button"
-                      onClick={() => startJobForm(record)}
-                      disabled={isSaving}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      className="crud-action-button danger"
-                      onClick={() => handleDeleteJob(record)}
-                      disabled={isSaving}
-                    >
-                      Hapus
-                    </button>
-                  </div>
+                  {canManageOperations && (
+                    <div className="crud-record-actions">
+                      <button
+                        type="button"
+                        className="crud-action-button"
+                        onClick={() => startJobForm(record)}
+                        disabled={isSaving}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="crud-action-button danger"
+                        onClick={() => requestDelete("job", record)}
+                        disabled={isSaving}
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  )}
                 </article>
               ))
             ) : (
@@ -381,9 +409,9 @@ export function EditJobAttendanceSidebar({
             )}
           </section>
         </div>
-      )}
+        )}
 
-      {mode === "attendance" && (
+        {mode === "attendance" && (
         <form onSubmit={handleAttendanceSubmit} className="sidebar-form">
           <section className="sidebar-section">
             <div className="sidebar-form-grid">
@@ -437,7 +465,7 @@ export function EditJobAttendanceSidebar({
                   ))}
                 </select>
               </FormField>
-              <FormField label="Status">
+              <FormField label="Status absensi">
                 <select
                   value={attendanceForm.status}
                   onChange={(event) =>
@@ -448,7 +476,7 @@ export function EditJobAttendanceSidebar({
                   }
                   required
                 >
-                  <option value="">Pilih pengecualian</option>
+                  <option value="">Pilih status absensi</option>
                   <option value="late">Late</option>
                   <option value="leave">Leave</option>
                   <option value="early_departure">Early departure</option>
@@ -466,13 +494,13 @@ export function EditJobAttendanceSidebar({
               Batal
             </button>
             <button type="submit" className="save-button" disabled={isSaving}>
-              {isSaving ? "Menyimpan..." : "Simpan pengecualian"}
+              {isSaving ? "Menyimpan..." : "Simpan absensi"}
             </button>
           </div>
         </form>
-      )}
+        )}
 
-      {mode === "job" && (
+        {mode === "job" && (
         <form onSubmit={handleJobSubmit} className="sidebar-form">
           <section className="sidebar-section">
             <div className="sidebar-form-grid">
@@ -580,7 +608,67 @@ export function EditJobAttendanceSidebar({
             </button>
           </div>
         </form>
+        )}
+      </RightInputSidebar>
+      {pendingDelete && (
+        <div
+          className="confirm-dialog-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !isSaving) {
+              setPendingDelete(null);
+              setDeleteError("");
+            }
+          }}
+        >
+          <section
+            className="confirm-dialog"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="confirm-delete-title"
+            aria-describedby="confirm-delete-description"
+          >
+            <div className="confirm-dialog-icon" aria-hidden="true">
+              !
+            </div>
+            <h2 id="confirm-delete-title">
+              Hapus {pendingDelete.type === "attendance" ? "absensi" : "job"}?
+            </h2>
+            <p id="confirm-delete-description">
+              {pendingDelete.type === "attendance"
+                ? `Absensi ${pendingDelete.record.member.name} tanggal ${pendingDelete.record.date.slice(0, 10)}`
+                : `Job "${pendingDelete.record.title}"`}{" "}
+              akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.
+            </p>
+            {deleteError && (
+              <p className="confirm-dialog-error" role="alert">
+                Gagal menghapus: {deleteError}
+              </p>
+            )}
+            <div className="confirm-dialog-actions">
+              <button
+                ref={cancelDeleteButtonRef}
+                type="button"
+                className="secondary-button"
+                onClick={() => {
+                  setPendingDelete(null);
+                  setDeleteError("");
+                }}
+                disabled={isSaving}
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                className="confirm-delete-button"
+                onClick={handleConfirmDelete}
+                disabled={isSaving}
+              >
+                {isSaving ? "Menghapus..." : "Ya, hapus"}
+              </button>
+            </div>
+          </section>
+        </div>
       )}
-    </RightInputSidebar>
+    </>
   );
 }

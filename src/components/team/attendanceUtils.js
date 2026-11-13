@@ -10,6 +10,15 @@ export function getAttendanceForDate(records, date) {
   );
 }
 
+export function findAttendanceRecord(records, { memberId, date, shift }) {
+  return records.find(
+    (record) =>
+      record.member.id === Number(memberId) &&
+      record.date.slice(0, 10) === date &&
+      record.shift === shift,
+  );
+}
+
 export function normalizeAttendanceStatus(status) {
   return status === "absent" ? "leave" : status;
 }

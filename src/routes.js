@@ -4,6 +4,8 @@ export const navRoutes = {
   "Work orders": "/work-orders",
   Team: "/team",
   Reports: "/reports",
+  "Attendance requests": "/attendance-requests",
+  Accounts: "/admin/accounts",
   Settings: "/settings",
 };
 
@@ -14,4 +16,8 @@ export const routeLabels = Object.fromEntries(
 export const implementedRoutes = {
   overview: navRoutes.Overview,
   team: navRoutes.Team,
+  login: "/login",
+  register: "/register",
+  attendanceRequests: "/attendance-requests",
+  adminAccounts: "/admin/accounts",
 };

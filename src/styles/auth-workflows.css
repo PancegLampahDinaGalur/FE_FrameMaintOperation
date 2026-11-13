@@ -1,0 +1,256 @@
+.auth-workflow-page {
+  display: grid;
+  gap: 22px;
+}
+.auth-loading {
+  display: grid;
+  min-height: 100vh;
+  place-content: center;
+  gap: 12px;
+  background: #f7f8fc;
+  color: #625d78;
+  font-size: 14px;
+  text-align: center;
+}
+.auth-workflow-card {
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(29, 26, 61, 0.05);
+}
+.auth-workflow-card h2 {
+  margin: 0;
+  color: var(--ink);
+  font: 600 18px Outfit, sans-serif;
+}
+.request-form {
+  display: grid;
+  gap: 16px;
+}
+.auth-workflow-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.auth-workflow-form-grid label {
+  display: grid;
+  gap: 7px;
+  color: #57536d;
+  font-size: 12px;
+  font-weight: 700;
+}
+.auth-workflow-form-grid input,
+.auth-workflow-form-grid select,
+.auth-workflow-form-grid textarea,
+.auth-workflow-filters input,
+.auth-workflow-filters select,
+.auth-account-actions select {
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid #e6e4ee;
+  border-radius: 8px;
+  background: #fff;
+  color: #292540;
+  font: inherit;
+  font-size: 12px;
+}
+.auth-workflow-form-grid textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+.auth-workflow-span {
+  grid-column: 1 / -1;
+}
+.auth-workflow-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.auth-workflow-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.auth-workflow-filters input,
+.auth-workflow-filters select {
+  min-height: 36px;
+}
+.auth-request-list,
+.auth-account-list {
+  display: grid;
+  gap: 10px;
+}
+.auth-request-item,
+.auth-account-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px;
+  border: 1px solid #efedf4;
+  border-radius: 12px;
+  background: #fcfcfe;
+}
+.auth-request-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.auth-request-title strong,
+.auth-account-details strong {
+  color: #292540;
+  font-size: 14px;
+}
+.auth-request-item p {
+  margin: 7px 0 0;
+  color: #716d82;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.auth-status {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.auth-status.is-pending {
+  background: #fff4dc;
+  color: #946200;
+}
+.auth-status.is-approved {
+  background: #e6f7ed;
+  color: #257746;
+}
+.auth-status.is-rejected {
+  background: #fdecec;
+  color: #b43e3e;
+}
+.auth-review-note {
+  color: #5f48df !important;
+}
+.auth-review-actions,
+.auth-account-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.auth-review-actions .primary-button,
+.auth-review-actions .secondary-button,
+.auth-account-actions .primary-button,
+.auth-account-actions .secondary-button {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 11px;
+}
+.auth-account-details {
+  display: grid;
+  gap: 6px;
+}
+.auth-account-details span {
+  color: #716d82;
+  font-size: 11px;
+}
+.auth-account-edit-field {
+  display: grid;
+  gap: 5px;
+  color: #57536d;
+  font-size: 11px;
+  font-weight: 700;
+}
+.auth-account-edit-field input {
+  min-width: min(100%, 300px);
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid #e6e4ee;
+  border-radius: 8px;
+  color: #292540;
+  font: inherit;
+  font-weight: 400;
+}
+.auth-account-actions select {
+  min-height: 36px;
+}
+.auth-workflow-error,
+.auth-workflow-success {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.auth-workflow-error {
+  background: #fff0f0;
+  color: #a93636;
+}
+.auth-workflow-success {
+  background: #eaf8ef;
+  color: #237344;
+}
+.auth-workflow-empty {
+  color: #89869c;
+  font-size: 13px;
+}
+.dark-mode .auth-workflow-card {
+  border-color: #343247;
+  background: #211f31;
+}
+.dark-mode .auth-workflow-card h2,
+.dark-mode .auth-request-title strong,
+.dark-mode .auth-account-details strong {
+  color: #eeeaff;
+}
+.dark-mode .auth-workflow-form-grid label,
+.dark-mode .auth-account-edit-field {
+  color: #d0c8ff;
+}
+.dark-mode .auth-workflow-form-grid input,
+.dark-mode .auth-workflow-form-grid select,
+.dark-mode .auth-workflow-form-grid textarea,
+.dark-mode .auth-workflow-filters input,
+.dark-mode .auth-workflow-filters select,
+.dark-mode .auth-account-actions select,
+.dark-mode .auth-account-edit-field input {
+  border-color: #49445f;
+  background: #29273b;
+  color: #eeeaff;
+}
+.dark-mode .auth-request-item,
+.dark-mode .auth-account-item {
+  border-color: #343247;
+  background: #29273b;
+}
+.dark-mode .auth-request-item p,
+.dark-mode .auth-account-details span,
+.dark-mode .auth-workflow-empty {
+  color: #aaa6bd;
+}
+.dark-mode .auth-loading {
+  background: #171624;
+  color: #eeeaff;
+}
+@media (max-width: 760px) {
+  .auth-workflow-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .auth-workflow-span {
+    grid-column: auto;
+  }
+  .auth-request-item,
+  .auth-account-item {
+    flex-direction: column;
+  }
+  .auth-workflow-filters {
+    width: 100%;
+  }
+  .auth-workflow-filters input,
+  .auth-workflow-filters select {
+    flex: 1 1 135px;
+  }
+}
