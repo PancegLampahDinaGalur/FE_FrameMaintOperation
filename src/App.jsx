@@ -1,37 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { Sidebar } from "./components/layout/Sidebar";
 import { Topbar } from "./components/layout/Topbar";
 import { OverviewPage } from "./components/overview/OverviewPage";
 import { TeamPage } from "./components/team/TeamPage";
-import { EditJobAttendanceSidebar } from "./components/team/EditJobAttendanceSidebar";
-import { useSaveTeamOperationsMutation } from "./services/teamApi";
-import { routeLabels } from "./routes";
+import { useGetTeamMembersQuery } from "./services/teamApi";
+import { implementedRoutes, routeLabels } from "./routes";
+
+function NotFoundPage() {
+  return (
+    <section className="content">
+      <div className="page-heading">
+        <div>
+          <p className="eyebrow">PAGE NOT AVAILABLE</p>
+          <h1>Halaman belum tersedia</h1>
+          <p className="heading-subtitle">
+            Halaman ini belum dibuat. Kembali ke dashboard untuk melanjutkan.
+          </p>
+        </div>
+        <Link className="primary-button" to={implementedRoutes.overview}>
+          Kembali ke overview
+        </Link>
+      </div>
+    </section>
+  );
+}
 
 export default function App() {
   const location = useLocation();
-  const activeNav = routeLabels[location.pathname] || "Overview";
+  const activeNav = routeLabels[location.pathname] || "Page not found";
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [editSidebarOpen, setEditSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("frame-maint-theme") === "dark");
-  const [saveMessage, setSaveMessage] = useState("");
-  const [saveTeamOperations] = useSaveTeamOperationsMutation();
-
+  const {
+    data: members = [],
+    isLoading: membersLoading,
+    error: membersError,
+    refetch: refetchMembers,
+  } = useGetTeamMembersQuery(undefined, {
+    skip: location.pathname !== implementedRoutes.team,
+  });
   useEffect(() => {
     localStorage.setItem("frame-maint-theme", darkMode ? "dark" : "light");
   }, [darkMode]);
-
-  const handleEditSidebarOpen = () => {
-    setMenuOpen(false);
-    setEditSidebarOpen(true);
-  };
-
-  const handleEditSidebarClose = () => setEditSidebarOpen(false);
-  const handleSave = async (data, completedRequestKeys) => {
-    await saveTeamOperations({ formData: data, completedRequestKeys }).unwrap();
-    setSaveMessage("Data attendance dan job berhasil disimpan.");
-  };
 
   return (
     <div className={`app-shell ${menuOpen ? "sidebar-open" : ""} ${darkMode ? "dark-mode" : ""}`}>
@@ -54,37 +65,22 @@ export default function App() {
 
         <Routes>
           <Route
-            path="/team"
+            path={implementedRoutes.team}
             element={
               <TeamPage
-                editSidebarOpen={editSidebarOpen}
-                onEditSidebarOpen={handleEditSidebarOpen}
-                onEditSidebarClose={handleEditSidebarClose}
+                members={members}
+                membersLoading={membersLoading}
+                membersError={membersError}
+                onRetryMembers={refetchMembers}
+                onEditSidebarOpen={() => setMenuOpen(false)}
               />
             }
           />
-          <Route path="*" element={<OverviewPage />} />
+          <Route path={implementedRoutes.overview} element={<OverviewPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 
-      <EditJobAttendanceSidebar
-        isOpen={editSidebarOpen}
-        onClose={handleEditSidebarClose}
-        onSave={handleSave}
-      />
-
-      {saveMessage && (
-        <div className="app-save-notice" role="status">
-          <span>{saveMessage}</span>
-          <button
-            type="button"
-            onClick={() => setSaveMessage("")}
-            aria-label="Tutup notifikasi"
-          >
-            ×
-          </button>
-        </div>
-      )}
     </div>
   );
 }

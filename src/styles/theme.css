@@ -1,0 +1,163 @@
+.dark-mode {
+  --border: #343247;
+  --ink: #f3f1ff;
+  --muted: #aaa6bd;
+  color: #eeeaff;
+  background: #171624;
+}
+.dark-mode .main-content,
+.dark-mode .content {
+  background: #171624;
+}
+.dark-mode .sidebar,
+.dark-mode .topbar,
+.dark-mode .panel,
+.dark-mode .stat-card,
+.dark-mode .team-stat-card,
+.dark-mode .calendar-day,
+.dark-mode .theme-toggle {
+  background: #211f31;
+  color: #eeeaff;
+}
+.dark-mode .workspace-switcher,
+.dark-mode .calendar-day.weekend {
+  background: #29273b;
+}
+.dark-mode .topbar,
+.dark-mode .sidebar,
+.dark-mode .panel,
+.dark-mode .stat-card,
+.dark-mode .team-stat-card {
+  border-color: #343247;
+}
+.dark-mode .breadcrumb strong,
+.dark-mode .panel h2,
+.dark-mode .stat-value,
+.dark-mode .team-stat-card strong,
+.dark-mode .calendar-day,
+.dark-mode .page-heading h1 {
+  color: #eeeaff;
+}
+.dark-mode .breadcrumb,
+.dark-mode .panel-header p,
+.dark-mode .heading-subtitle,
+.dark-mode .stat-label,
+.dark-mode .team-stat-card div span,
+.dark-mode .calendar-weekday,
+.dark-mode .attendance-legend,
+.dark-mode .attendance-summary span,
+.dark-mode .team-member-info span {
+  color: #aaa6bd;
+}
+.dark-mode .nav-item {
+  color: #aaa6bd;
+}
+.dark-mode .nav-item.active {
+  color: #d0c8ff;
+  background: #383253;
+}
+.dark-mode .nav-item em {
+  background: #302d43;
+  color: #c1bdd0;
+}
+.dark-mode .calendar-day {
+  border-color: #343247;
+}
+.dark-mode .attendance-summary,
+.dark-mode .attendance-summary div,
+.dark-mode .job-rows,
+.dark-mode .job-row {
+  border-color: #343247;
+}
+.dark-mode .job-track {
+  background: repeating-linear-gradient(to right, transparent 0, transparent calc(16.666% - 1px), #343247 calc(16.666% - 1px), #343247 16.666%);
+}
+.dark-mode .theme-toggle {
+  border-color: #4a465f;
+  color: #ffd76a;
+}
+.dark-mode .mobile-menu,
+.dark-mode .icon-button {
+  color: #f0edff;
+}
+.dark-mode .mobile-menu:hover,
+.dark-mode .icon-button:hover {
+  color: #c9bcff;
+}
+.dark-mode .breadcrumb b {
+  color: #625d78;
+}
+.dark-mode .workspace-switcher {
+  border-color: #49445f;
+}
+.dark-mode .workspace-switcher small,
+.dark-mode .muted,
+.dark-mode .support-card span {
+  color: #bdb8d0;
+}
+.dark-mode .workspace-switcher select {
+  color: #f0edff;
+}
+.dark-mode .support-card {
+  background: #302b4d;
+  color: #d6ceff;
+}
+.dark-mode .sidebar-close {
+  border-color: #625a91;
+  background: #39335d;
+  color: #eeeaff;
+}
+.dark-mode .sidebar-close:hover {
+  background: #494174;
+}
+.dark-mode .period-select select,
+.dark-mode .calendar-month button {
+  border-color: #4a465f;
+  background: #29273b;
+  color: #eeeaff;
+}
+.dark-mode .text-button,
+.dark-mode .activity-footer {
+  color: #b9aaff;
+}
+.dark-mode .chart-legend b,
+.dark-mode .maintenance-info strong,
+.dark-mode .activity-row strong,
+.dark-mode .problem-title-row strong,
+.dark-mode .uptime-list b {
+  color: #eeeaff;
+}
+.dark-mode .chart-legend,
+.dark-mode .y-labels,
+.dark-mode .x-labels,
+.dark-mode .uptime-list div,
+.dark-mode .maintenance-date,
+.dark-mode .activity-row span,
+.dark-mode .activity-row small {
+  color: #bdb8d0;
+}
+.dark-mode .grid-lines i,
+.dark-mode .maintenance-row,
+.dark-mode .activity-row,
+.dark-mode .problem-card,
+.dark-mode .problem-details,
+.dark-mode .uptime-list {
+  border-color: #3c3850;
+}
+.dark-mode .problem-card {
+  background: #211f31;
+}
+.dark-mode .problem-details span {
+  color: #c4bfd3;
+}
+.dark-mode .uptime-list b small {
+  color: #aaa6bd;
+}
+.dark-mode .mini-bar {
+  background: #3b374d;
+}
+.dark-mode .score-ring {
+  border-color: #403b59;
+  border-right-color: #9a87ff;
+  border-top-color: #9a87ff;
+}
